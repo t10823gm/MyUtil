@@ -25,7 +25,7 @@ arg = parser.parse_args()
 
 
 ''' params '''
-ROOT_DIR = arg.src
+SRC_DIR = arg.src
 wavelength = arg.wavelength
 start_tp = arg.start_tp
 DEST_DIR = arg.dest
@@ -33,8 +33,8 @@ DEST_DIR = arg.dest
 ''' functions '''
 def chars_to_int(chars):
     '''
-    For MATLAB image processing script developed at Tobias Lab.
-    Split well information into row number and column number (e.g. A3 -> 3_3)
+    For MATLAB image processing script developed by Tobias Lab.
+    Split well information into row number and column number (e.g. A3 -> 1_3)
     :param chars: column number in multi-well dish
     :return: converted value
     '''
@@ -47,11 +47,11 @@ def chars_to_int(chars):
         result += i * 26 ** exp
     return resultgit
 
-def cpy_rename(path, TARGET_DIR, tp, wavelength, start_tp = 0):
+def cpy_rename(path, DEST_DIR, tp, wavelength, start_tp = 0):
     '''
-    Copy TIFF file in "CellTK/data" directory after rename
+    Copy TIFF file from external HDD to "CellTK/data" directory after rename
     :param path: path to 'TimePoint_#' directory
-    :param TARGET_DIR: parent directory of each experimental result
+    :param SRC_DIR: parent directory of each experimental result
     :param tp: Time point information
     :param wavelength: wavelength data pass as dictionary
     :return: null
@@ -68,9 +68,9 @@ def cpy_rename(path, TARGET_DIR, tp, wavelength, start_tp = 0):
 
             w_s = fn[-2] # well info or stage position info
             if w_s[0] == 's':
-                print('multi-position in a well')
-                wellinfo = join(TARGET_DIR, fn[-3])
-                if exists(join(TARGET_DIR, fn[-3])) != True:
+                #print('multi-position in a well')
+                wellinfo = join(DEST_DIR, fn[-3])
+                if exists(join(DEST_DIR, fn[-3])) != True:
                     makedirs(wellinfo)
                 if exists(join(wellinfo, fn[-2])) != True:
                     makedirs(join(wellinfo, fn[-2]))
@@ -84,26 +84,26 @@ def cpy_rename(path, TARGET_DIR, tp, wavelength, start_tp = 0):
                 shutil.copy(join(path, file), join(wellinfo, fn[-2], afile))
 
             else:
-                print('single position in a well')
-                if exists(join(TARGET_DIR, w_s)) != True:
-                    makedirs(join(TARGET_DIR, w_s))
+                #print('single position in a well')
+                if exists(join(DEST_DIR, w_s)) != True:
+                    makedirs(join(DEST_DIR, w_s))
 
-                save_dir = join(TARGET_DIR, w_s)
+                save_dir = join(DEST_DIR, w_s)
                 wl = fn[-1]  # wavelength
                 wl = wl.split('.')[0]
                 total_tp = int(tp) + int(start_tp)
                 afile = 's01' + '_' + wavelength[wl] + '_t' + '{0:03d}'.format(total_tp) + '.TIF'
                 print('Source : ' + join(path, file))
-                print('Save as : ' + join(TARGET_DIR, fn[-3], afile))
+                print('Save as : ' + join(DEST_DIR, fn[-3], afile))
                 shutil.copy(join(path, file), join(save_dir, afile))
     return
 
-for i, n in enumerate(os.listdir(ROOT_DIR)):
-    path = os.path.join(ROOT_DIR, n)
+for i, n in enumerate(os.listdir(SRC_DIR)):
+    path = os.path.join(SRC_DIR, n)
     if os.path.isdir(path):
         tp = n.split('_')[-1] # timepoint
         #print('path is ', path)
-        cpy_rename(path, ROOT_DIR, tp, wavelength, start_tp)
+        cpy_rename(path, DEST_DIR, tp, wavelength, start_tp)
 
     if i % 50 == 0:
         print(str(i) + "th point is passed")
