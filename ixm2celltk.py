@@ -8,28 +8,27 @@ import os
 import string
 import argparse
 
-'''
+
 parser = argparse.ArgumentParser(
     prog='ixm2celltk.py',
-    usage='change file name from IXM-XLS sytle to cell celltk',
-    description='discription',
-    epilog='end',
-    add_help=True
+    usage='python ixm2celltk.py [-h] [-s \'hgoehoge\'] [-d \'fugafuga\'] [-t ]',
+    description='change file name from IXM-XLS sytle to CellTK',
+    #add_help=True
 )
 
-parser.add_argument('-p', '--path')
-parser.add_argument('-t', '--start_timepoint')
-parser.add_argument('-d', '--destination')
-parser.add_argument('-s', '--source')
+parser.add_argument('-s', '--src', help='full path to the source directory')
+parser.add_argument('-d', '--dest', help='full path to the destination directory')
+parser.add_argument('-t', '--start_tp',  default=0, type=int, help='start timepint')
+parser.add_argument('-w', '--wavelength', help='dictionary about wavelength name',\
+                    default={'w1':'w1iRFP', 'w2':'w2mKO', 'w3':'w3mCherry', 'w4':'w4GFP', 'w5':'w5CFP'})
 arg = parser.parse_args()
-'''
+
 
 ''' params '''
-#ROOT_DIR = sys.argv[1]
-ROOT_DIR = './testdata'
-#start_tp = sys.argv[2]
-start_tp = 0
-wavelength = {'w1':'w1iRFP', 'w2':'w2mKO', 'w3':'w3mCherry', 'w4':'w4GFP', 'w5':'w5CFP'}
+ROOT_DIR = arg.src
+wavelength = arg.wavelength
+start_tp = arg.start_tp
+DEST_DIR = arg.dest
 
 ''' functions '''
 def chars_to_int(chars):
@@ -46,7 +45,7 @@ def chars_to_int(chars):
         i = string.ascii_uppercase.index(c) + 1
         exp = size - pos - 1
         result += i * 26 ** exp
-    return result
+    return resultgit
 
 def cpy_rename(path, TARGET_DIR, tp, wavelength, start_tp = 0):
     '''
@@ -105,6 +104,6 @@ for i, n in enumerate(os.listdir(ROOT_DIR)):
         tp = n.split('_')[-1] # timepoint
         #print('path is ', path)
         cpy_rename(path, ROOT_DIR, tp, wavelength, start_tp)
-        # afile = cpy_rename(path, os.getcwd(), tp, wavelength)
+
     if i % 50 == 0:
         print(str(i) + "th point is passed")
