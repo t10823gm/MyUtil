@@ -7,11 +7,12 @@ import sys
 import os
 import string
 import argparse
+import json
 
-
+#python ixm2celltk.py -s /home/gembu/CellTK/data/MCF10A-inhibitors_Plate_252 -d /home/gembu/CellTK/data/20181203_MCF10A -w '{"w1":"w1iRFP", "w2":"w2mCherry", "w3":"w3GFP"}'
 parser = argparse.ArgumentParser(
     prog='ixm2celltk.py',
-    usage='python ixm2celltk.py [-h] [-s \'hgoehoge\'] [-d \'fugafuga\'] [-t ]',
+    usage='python ixm2celltk.py [-h] [-s \'hgoehoge\'] [-d \'fugafuga\'] [-t ] [-w \'dict\']',
     description='change file name from IXM-XLS sytle to CellTK',
     #add_help=True
 )
@@ -19,10 +20,9 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-s', '--src', help='full path to the source directory')
 parser.add_argument('-d', '--dest', help='full path to the destination directory')
 parser.add_argument('-t', '--start_tp',  default=0, type=int, help='start timepint')
-parser.add_argument('-w', '--wavelength', help='dictionary about wavelength name',\
-                    default={'w1':'w1iRFP', 'w2':'w2mKO', 'w3':'w3mCherry', 'w4':'w4GFP', 'w5':'w5CFP'})
+parser.add_argument('-w', '--wavelength', help='dictionary about wavelength name', type=json.loads,\
+                    default={"w1":"w1iRFP", "w2":"w2mKO", "w3":"w3mCherry", "w4":"w4GFP", "w5":"w5CFP"})
 arg = parser.parse_args()
-
 
 ''' params '''
 SRC_DIR = arg.src
