@@ -37,3 +37,13 @@ def normalizeAtStimulus(FC_ratio, timepoint):
     for i in range(nmFC_ratio.shape[1]):
         nmFC_ratio[:, i] = nmFC_ratio[:, i]/np.mean(nmFC_ratio[0:timepoint, i])
     return nmFC_ratio
+
+def arrayMeanSd(array, timepoints):
+    array_mean = np.mean(array, axis=1)
+    array_sd = np.std(array, axis=1)
+    return nm_mean, nm_sd
+
+def plotShadedErrorBar(array, timepoints)
+    plt.plot(timepoints, array)
+    plt.fill_between(timepoints, array_mean-arrat_sd, array_mean+array_sd, alpha=0.5)
+    return
