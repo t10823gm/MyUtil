@@ -4,8 +4,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 """
-Metamorphで解析したデータをPythonで図示する時に使用する．
-MMから出力されるファイルには1ポジションのデータのみが入っていることを想定している．
+MetamorphのRegion measurementで出力した結果をPythonで図示，解析する際に使用する．
+FRET analysis, KTR analysisでは挙動を確認した．
 """
 def loadExcelFile(input_file_name):
     input_book = pd.ExcelFile(input_file_name) 
@@ -16,6 +16,15 @@ def loadExcelFile(input_file_name):
     df.columns = [c.replace(' ', '_') for c in df.columns]
     df = df[df['Image_Name'] != 'Image Name'] # for multi-postion measurement
     print('Channel Info:', np.unique(np.asarray(df['Image_Name'])))
+    return df
+
+def loadExcelFiles(xlsxlist):
+    for i, x in enumerate(xlsxlist):
+        if i == 0:
+            df = mm2py.loadExcelFile(x)
+        else:
+            tmp_df = mm2py.loadExcelFile(x)
+            df = pd.concat([df, tmp_df], join='outer')
     return df
 
 def getDataFromDf(df):
